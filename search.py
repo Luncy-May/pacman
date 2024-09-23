@@ -78,6 +78,7 @@ def tinyMazeSearch(problem):
 #     E = Directions.EAST
 #     N = Directions.NORTH
 
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -91,45 +92,56 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    Start: (5, 5)
+    Is the start a goal? False
+    Start's successors: [((5, 4), 'South', 1), ((4, 5), 'West', 1)]
     """
     "*** YOUR CODE HERE ***"
-    from game import Directions
-    S = Directions.SOUTH
-    W = Directions.WEST
-    E = Directions.EAST
-    N = Directions.NORTH  
-   
-    # algorithm of depth first search
-    def depth_helper (problem, actions, visited):
-        if problem.isGoalState(): # If we reach the goal state (it could be that we start at the goal state)
-            return actions
-        # otherwise, we start exploring the maze 
-        
-        currentNode = problem.getStartState() # get current location
-        arrayOfSuccessors = problem.getSuccessors()
-        for successor in arrayOfSuccessors:
-            direction = successor[1][0].lower()
-            depth_helper
-        return 
-    actions = depth_helper(problem,[],)
-   
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    # [ ((5, 4), 'South', 1), ((4, 5), 'West', 1) ]      ( nextState, action, cost)
-    return actions
+    stack=util.Stack()
+    visited=[]
+    stack.push((problem.getStartState(),[]))
+    visited.append(problem.getStartState())
     
+    if problem.isGoalState(problem.getStartState()):
+        return []
+    
+    while not stack.isEmpty():
+        curr=stack.pop()
+
+        for potentialnext in problem.getSuccessors(curr[0]):
+            if potentialnext[0] not in visited:
+                if problem.isGoalState(potentialnext[0]):
+                    return curr[1]+[potentialnext[1]]
+                
+                else:
+                    stack.push((potentialnext[0],(curr[1]+[potentialnext[1]])))
+                    visited.append(potentialnext[0])
+                
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    from game import Directions
-    S = Directions.SOUTH
-    W = Directions.WEST
-    E = Directions.EAST
-    N = Directions.NORTH
+    queue=util.Queue()
+    visited=[]
+    queue.push((problem.getStartState(),[]))
+    visited.append(problem.getStartState())
     
-    util.raiseNotDefined()
+    if problem.isGoalState(problem.getStartState()):
+        return []
+    
+    while not queue.isEmpty():
+        curr=queue.pop()
+
+        for potentialnext in problem.getSuccessors(curr[0]):
+            if potentialnext[0] not in visited:
+                if problem.isGoalState(potentialnext[0]):
+                    return curr[1]+[potentialnext[1]]
+                
+                else:
+                    queue.push((potentialnext[0],(curr[1]+[potentialnext[1]])))
+                    visited.append(potentialnext[0])
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
