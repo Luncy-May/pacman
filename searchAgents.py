@@ -484,6 +484,10 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
     foodList = foodGrid.asList()
+    
+    if not foodList:
+        return 0
+    
     foodListCost = [0 for i in range(len(foodList))]
     for eachFood in range(len(foodList)):
         foodListCost[eachFood] = mazeDistance(position, foodList[eachFood], problem.startingGameState)
