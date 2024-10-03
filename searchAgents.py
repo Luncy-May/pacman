@@ -379,6 +379,7 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     if problem.isGoalState(state):
         return 0
+
     heuristic =0 
     i=0
     for corner in state[1]:
@@ -518,6 +519,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
+        return search.bfs(problem)
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -554,6 +556,10 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
+        allFood = self.food.asList()
+        for food in allFood:
+            if (util.manhattanDistance(state,food) == 0): return True
+        return False
         util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
