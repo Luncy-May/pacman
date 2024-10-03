@@ -106,22 +106,22 @@ def breadthFirstSearch(problem):
     queue=util.Queue()
     visited=[]
     queue.push((problem.getStartState(),[]))
-    visited.append(problem.getStartState())
     
     if problem.isGoalState(problem.getStartState()):
         return []
     
     while not queue.isEmpty():
         curr=queue.pop()
+        if curr[0] not in visited:
+            visited.append(curr[0])  # Mark it as visited after popping
+                    
+            for potentialnext in problem.getSuccessors(curr[0]):
+                if potentialnext[0] not in visited:
+                    if problem.isGoalState(potentialnext[0]):
+                        return curr[1] + [potentialnext[1]]  # Return path if goal is found
+                    else:
+                        queue.push((potentialnext[0], curr[1] + [potentialnext[1]]))  # Add successor to queue with updated path
 
-        for potentialnext in problem.getSuccessors(curr[0]):
-            if potentialnext[0] not in visited:
-                if problem.isGoalState(potentialnext[0]):
-                    return curr[1]+[potentialnext[1]]
-                
-                else:
-                    queue.push((potentialnext[0],(curr[1]+[potentialnext[1]])))
-                    visited.append(potentialnext[0])
     return []
 
 def uniformCostSearch(problem):
