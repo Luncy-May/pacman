@@ -82,22 +82,19 @@ def depthFirstSearch(problem):
     stack=util.Stack()
     visited=[]
     stack.push((problem.getStartState(),[]))
-    visited.append(problem.getStartState())
-    
-    if problem.isGoalState(problem.getStartState()):
-        return []
     
     while not stack.isEmpty():
         curr=stack.pop()
 
-        for potentialnext in problem.getSuccessors(curr[0]):
-            if potentialnext[0] not in visited:
-                if problem.isGoalState(potentialnext[0]):
-                    return curr[1]+[potentialnext[1]]
-                
-                else:
-                    stack.push((potentialnext[0],(curr[1]+[potentialnext[1]])))
-                    visited.append(potentialnext[0])
+        if problem.isGoalState(curr[0]):
+            return curr[1]
+
+        if curr[0] not in visited:
+            visited.append(curr[0])
+
+            for potentialnext in problem.getSuccessors(curr[0]):
+                if potentialnext[0] not in visited:
+                    stack.push((potentialnext[0],curr[1]+[potentialnext[1]]))
                 
     return []
 
@@ -106,48 +103,42 @@ def breadthFirstSearch(problem):
     queue=util.Queue()
     visited=[]
     queue.push((problem.getStartState(),[]))
-    visited.append(problem.getStartState())
-    
-    if problem.isGoalState(problem.getStartState()):
-        return []
     
     while not queue.isEmpty():
         curr=queue.pop()
 
-        for potentialnext in problem.getSuccessors(curr[0]):
-            if potentialnext[0] not in visited:
-                if problem.isGoalState(potentialnext[0]):
-                    return curr[1]+[potentialnext[1]]
+        if problem.isGoalState(curr[0]):
+            return curr[1]
+
+        if curr[0] not in visited:
+            visited.append(curr[0])
+
+            for potentialnext in problem.getSuccessors(curr[0]):
+                if potentialnext[0] not in visited:
+                    queue.push((potentialnext[0],curr[1]+[potentialnext[1]]))
                 
-                else:
-                    queue.push((potentialnext[0],(curr[1]+[potentialnext[1]])))
-                    visited.append(potentialnext[0])
     return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     PQ = util.PriorityQueue()
-    visited = []
-    start = problem.getStartState()
+    visited=[]
     PQ.update((problem.getStartState(),[]), 0) # (item/tuple, cost)
-    visited.append(problem.getStartState())
-    if problem.isGoalState(problem.getStartState()):
-        return []
     
     while not PQ.isEmpty():
-        curr = PQ.pop()
-        for potentialnext in problem.getSuccessors(curr[0]):
-            nextPosition = potentialnext[0]
-            nextDirection = potentialnext[1]
-            nextCost = potentialnext[2]
-            if potentialnext[0] not in visited:
-                if problem.isGoalState(nextPosition):
-                    return curr[1]+[nextDirection]
-                else:
-                    PQ.update((nextPosition,(curr[1]+[nextDirection])), problem.getCostOfActions(curr[1]+[nextDirection]))
-                    visited.append(potentialnext[0])
-        
+        curr=PQ.pop()
+
+        if problem.isGoalState(curr[0]):
+            return curr[1]
+
+        if curr[0] not in visited:
+            visited.append(curr[0])
+
+            for potentialnext in problem.getSuccessors(curr[0]):
+                if potentialnext[0] not in visited:
+                    PQ.update((potentialnext[0],(curr[1]+[potentialnext[1]])), problem.getCostOfActions(curr[1]+[potentialnext[1]]))
+                
     return []
 
 def nullHeuristic(state, problem=None):
@@ -161,28 +152,23 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     PQ = util.PriorityQueue()
-    visited = []
-    start = problem.getStartState()
+    visited=[]
     PQ.update((problem.getStartState(),[]), 0) # (item/tuple, cost)
-    visited.append(problem.getStartState())
-    if problem.isGoalState(problem.getStartState()):
-        return []
     
     while not PQ.isEmpty():
-        curr = PQ.pop()
-        for potentialnext in problem.getSuccessors(curr[0]):
-            nextPosition = potentialnext[0]
-            nextDirection = potentialnext[1]
-            nextCost = potentialnext[2]
-            if potentialnext[0] not in visited:
-                if problem.isGoalState(nextPosition):
-                    return curr[1]+[nextDirection]
-                else:
-                    PQ.update((nextPosition,(curr[1]+[nextDirection])), problem.getCostOfActions(curr[1]+[nextDirection]) + heuristic(curr[0], problem))
-                    visited.append(potentialnext[0])
-        
-    return []
+        curr=PQ.pop()
 
+        if problem.isGoalState(curr[0]):
+            return curr[1]
+
+        if curr[0] not in visited:
+            visited.append(curr[0])
+
+            for potentialnext in problem.getSuccessors(curr[0]):
+                if potentialnext[0] not in visited:
+                    PQ.update((potentialnext[0],(curr[1]+[potentialnext[1]])), problem.getCostOfActions(curr[1]+[potentialnext[1]])+heuristic(potentialnext[0], problem))
+                
+    return []
 
 # Abbreviations
 bfs = breadthFirstSearch
